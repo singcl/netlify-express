@@ -15,16 +15,27 @@ A modern Express.js application designed for deployment on Netlify using serverl
 
 ```
 netlify-express/
-├── public/                 # Static files served by Express
-│   ├── index.html         # Main HTML file
-│   └── app.js             # Frontend JavaScript
+├── config/                # Application configuration
+│   └── app.js            # Main configuration file
+├── middleware/            # Express middleware
+│   ├── errorHandler.js   # Error handling middleware
+│   └── logger.js         # Request logging middleware
+├── routes/               # API routes
+│   ├── index.js         # Main routes index
+│   ├── apiV1.js         # API v1 routes
+│   └── apiV2.js         # API v2 routes
+├── utils/                # Utility functions
+│   └── response.js      # Standardized response helpers
+├── public/               # Static files served by Express
+│   ├── index.html       # Main HTML file
+│   └── app.js           # Frontend JavaScript
 ├── netlify/
 │   └── functions/
-│       └── api.js         # Netlify function handler
-├── server.js              # Express server (for local development)
-├── netlify.toml           # Netlify configuration
-├── package.json           # Dependencies and scripts
-└── README.md              # This file
+│       └── api.js       # Netlify function handler
+├── server.js            # Express server (for local development)
+├── netlify.toml         # Netlify configuration
+├── package.json         # Dependencies and scripts
+└── README.md            # This file
 ```
 
 ## 🛠️ API Endpoints
