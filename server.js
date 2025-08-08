@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const serverless = require('serverless-http');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -68,4 +67,3 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Export for serverless deployment
 module.exports = app;
-module.exports.handler = serverless(app); 
