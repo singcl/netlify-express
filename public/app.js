@@ -78,6 +78,100 @@ const testUsersAPI = async () => {
     }
 };
 
+// API v2 test functions
+const testApiV2Status = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Testing /apiv2/status...</p>';
+    
+    try {
+        const response = await fetch('/apiv2/status');
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ API v2 Status Success!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
+const testApiV2Products = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Testing /apiv2/products...</p>';
+    
+    try {
+        const response = await fetch('/apiv2/products');
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ API v2 Products Success!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
+const testApiV2Orders = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Testing /apiv2/orders...</p>';
+    
+    try {
+        const mockOrderData = {
+            customerId: 'CUST123',
+            items: [
+                { productId: 1, name: 'Premium Widget', price: 99.99, quantity: 2 },
+                { productId: 3, name: 'Amazing Tool', price: 79.99, quantity: 1 }
+            ],
+            shippingAddress: {
+                street: '123 Main St',
+                city: 'Anytown',
+                state: 'CA',
+                zipCode: '12345'
+            }
+        };
+        
+        const response = await fetch('/apiv2/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(mockOrderData)
+        });
+        
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ API v2 Orders Success!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
 // Contact form handling
 const handleContactSubmit = async (event) => {
     event.preventDefault();

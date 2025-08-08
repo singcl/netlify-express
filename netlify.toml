@@ -15,6 +15,11 @@
   to = "/.netlify/functions/api/:splat"
   status = 200
 
+[[redirects]]
+  from = "/apiv2/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
 # Handle client-side routing
 [[redirects]]
   from = "/*"

@@ -29,11 +29,25 @@ netlify-express/
 
 ## 🛠️ API Endpoints
 
+### API v1 (Legacy)
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/hello` | Returns a greeting message with timestamp |
 | GET | `/api/users` | Returns mock user data |
 | POST | `/api/contact` | Handles contact form submissions |
+
+### API v2 (Enhanced)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/apiv2/status` | Returns API v2 status and version information |
+| GET | `/apiv2/products` | Returns product data with filtering support |
+| POST | `/apiv2/orders` | Creates new orders with validation |
+
+#### API v2 Features:
+- **Enhanced Status Endpoint**: Returns version info, environment status, and feature list
+- **Product Filtering**: Support for category and stock filtering via query parameters
+- **Order Management**: Full order creation with validation and total calculation
+- **Version Information**: All responses include API version for compatibility tracking
 
 ## 🚀 Quick Start
 
