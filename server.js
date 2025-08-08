@@ -1,11 +1,12 @@
 const express = require('express');
 const path = require('path');
 
-// Import routes, middleware, and config
+// Import routes, middleware, config, and task manager
 const routes = require('./routes');
 const logger = require('./middleware/logger');
 const errorHandler = require('./middleware/errorHandler');
 const config = require('./config/app');
+const taskManager = require('./tasks');
 
 const app = express();
 const PORT = config.port;
@@ -36,6 +37,10 @@ if (config.nodeEnv !== 'production') {
     console.log(`📡 API v1 available at http://localhost:${PORT}${config.api.v1.prefix}`);
     console.log(`📡 API v2 available at http://localhost:${PORT}${config.api.v2.prefix}`);
     console.log(`🌍 Environment: ${config.nodeEnv}`);
+    
+    // Start task manager
+    taskManager.start();
+    console.log(`⏰ Task manager started`);
   });
 }
 

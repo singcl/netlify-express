@@ -1,5 +1,6 @@
 const express = require('express');
 const config = require('../config/app');
+const taskManager = require('../tasks');
 const router = express.Router();
 
 // GET /apiv2/status
@@ -94,6 +95,58 @@ router.post('/orders', (req, res) => {
     order,
     version: config.api.v2.version
   });
+});
+
+// GET /apiv2/tasks - Get task manager status
+router.get('/tasks', (req, res) => {
+  const status = taskManager.getStatus();
+  res.json({
+    version: config.api.v2.version,
+    timestamp: new Date().toISOString(),
+    ...status
+  });
+});
+
+// POST /apiv2/tasks/start - Start task manager
+router.post('/tasks/start', (req, res) => {
+  try {
+    taskManager.start();
+    res.json({
+      success: true,
+      message: 'Task manager started successfully',
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to start task manager',
+      error: error.message,
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// POST /apiv2/tasks/stop - Stop task manager
+router.post('/tasks/stop', (req, res) => {
+  try {
+    taskManager.stop();
+    res.json({
+      success: true,
+      message: 'Task manager stopped successfully',
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to stop task manager',
+      error: error.message,
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 module.exports = router; 

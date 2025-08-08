@@ -172,6 +172,91 @@ const testApiV2Orders = async () => {
     }
 };
 
+// Task Manager functions
+const testApiV2Tasks = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Testing /apiv2/tasks...</p>';
+    
+    try {
+        const response = await fetch('/apiv2/tasks');
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ Task Manager Status!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
+const startTaskManager = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Starting Task Manager...</p>';
+    
+    try {
+        const response = await fetch('/apiv2/tasks/start', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ Task Manager Started!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
+const stopTaskManager = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Stopping Task Manager...</p>';
+    
+    try {
+        const response = await fetch('/apiv2/tasks/stop', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ Task Manager Stopped!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
 // Contact form handling
 const handleContactSubmit = async (event) => {
     event.preventDefault();

@@ -53,11 +53,15 @@ netlify-express/
 | GET | `/apiv2/status` | Returns API v2 status and version information |
 | GET | `/apiv2/products` | Returns product data with filtering support |
 | POST | `/apiv2/orders` | Creates new orders with validation |
+| GET | `/apiv2/tasks` | Get task manager status and running tasks |
+| POST | `/apiv2/tasks/start` | Start the task manager |
+| POST | `/apiv2/tasks/stop` | Stop the task manager |
 
 #### API v2 Features:
 - **Enhanced Status Endpoint**: Returns version info, environment status, and feature list
 - **Product Filtering**: Support for category and stock filtering via query parameters
 - **Order Management**: Full order creation with validation and total calculation
+- **Task Management**: Scheduled tasks for cleanup, health checks, and data synchronization
 - **Version Information**: All responses include API version for compatibility tracking
 
 ## 🚀 Quick Start
@@ -159,6 +163,49 @@ You can set environment variables in Netlify:
    ```
 
 2. **The route will automatically be available in production**
+
+## ⏰ Scheduled Tasks
+
+The application includes a comprehensive task management system with the following scheduled tasks:
+
+### Task Types
+
+1. **Cleanup Tasks**
+   - **Log Cleanup**: Daily at 2 AM - Removes log files older than 7 days
+   - **Temp Files Cleanup**: Every 6 hours - Removes temporary files older than 24 hours
+   - **Backup Cleanup**: Removes backup files older than 30 days
+
+2. **Health Check Tasks**
+   - **System Health Check**: Every 5 minutes - Monitors memory, CPU, and uptime
+   - **Database Health Check**: Every 15 minutes - Checks database connectivity
+
+3. **Data Sync Tasks**
+   - **Data Synchronization**: Every hour - Syncs data with external sources
+   - **Data Backup**: Daily at 3 AM - Creates backups of all data types
+
+### Task Management
+
+- **Start Tasks**: `POST /apiv2/tasks/start`
+- **Stop Tasks**: `POST /apiv2/tasks/stop`
+- **Check Status**: `GET /apiv2/tasks`
+
+### Adding New Tasks
+
+1. **Create task function in appropriate module** (`tasks/cleanup.js`, `tasks/healthCheck.js`, or `tasks/dataSync.js`)
+2. **Add task to TaskManager** in `tasks/index.js`
+3. **Configure schedule** using cron syntax
+
+Example:
+```javascript
+// In tasks/index.js
+const newTask = cron.schedule('0 */2 * * *', () => {
+  // Run every 2 hours
+  yourTaskFunction();
+}, {
+  scheduled: true,
+  timezone: "UTC"
+});
+```
 
 ### Styling
 

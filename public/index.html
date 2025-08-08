@@ -126,6 +126,16 @@
                         <button onclick="testApiV2Orders()" class="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                             Test /apiv2/orders
                         </button>
+                        <hr class="my-4">
+                        <button onclick="testApiV2Tasks()" class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                            Test /apiv2/tasks
+                        </button>
+                        <button onclick="startTaskManager()" class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                            Start Task Manager
+                        </button>
+                        <button onclick="stopTaskManager()" class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                            Stop Task Manager
+                        </button>
                     </div>
                     <div id="api-response" class="mt-4 p-4 bg-gray-100 rounded-lg min-h-[100px]">
                         <p class="text-gray-500">API responses will appear here...</p>
@@ -158,6 +168,19 @@
                         <div class="flex items-center space-x-2">
                             <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-mono">POST</span>
                             <span class="font-mono text-gray-700">/apiv2/orders</span>
+                        </div>
+                        <hr class="my-3">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-mono">GET</span>
+                            <span class="font-mono text-gray-700">/apiv2/tasks</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-mono">POST</span>
+                            <span class="font-mono text-gray-700">/apiv2/tasks/start</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-mono">POST</span>
+                            <span class="font-mono text-gray-700">/apiv2/tasks/stop</span>
                         </div>
                     </div>
                 </div>
