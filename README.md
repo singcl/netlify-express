@@ -56,12 +56,16 @@ netlify-express/
 | GET | `/apiv2/tasks` | Get task manager status and running tasks |
 | POST | `/apiv2/tasks/start` | Start the task manager |
 | POST | `/apiv2/tasks/stop` | Stop the task manager |
+| GET | `/apiv2/external-api` | Get external API monitoring statistics |
+| POST | `/apiv2/external-api/test` | Manually test external API connectivity |
+| POST | `/apiv2/external-api/test-endpoints` | Test specific external API endpoints |
 
 #### API v2 Features:
 - **Enhanced Status Endpoint**: Returns version info, environment status, and feature list
 - **Product Filtering**: Support for category and stock filtering via query parameters
 - **Order Management**: Full order creation with validation and total calculation
 - **Task Management**: Scheduled tasks for cleanup, health checks, and data synchronization
+- **External API Monitoring**: Automatic monitoring of external APIs to keep them alive
 - **Version Information**: All responses include API version for compatibility tracking
 
 ## 🚀 Quick Start
@@ -182,6 +186,10 @@ The application includes a comprehensive task management system with the followi
 3. **Data Sync Tasks**
    - **Data Synchronization**: Every hour - Syncs data with external sources
    - **Data Backup**: Daily at 3 AM - Creates backups of all data types
+
+4. **External API Monitoring Tasks**
+   - **NetEase API Ping**: Every minute - Keeps the NetEase Cloud Music API alive
+   - **NetEase API Testing**: Every 30 minutes - Tests specific API endpoints
 
 ### Task Management
 

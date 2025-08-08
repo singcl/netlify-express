@@ -1,6 +1,7 @@
 const express = require('express');
 const config = require('../config/app');
 const taskManager = require('../tasks');
+const externalApiTasks = require('../tasks/externalApi');
 const router = express.Router();
 
 // GET /apiv2/status
@@ -142,6 +143,74 @@ router.post('/tasks/stop', (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Failed to stop task manager',
+      error: error.message,
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// GET /apiv2/external-api - Get external API monitoring status
+router.get('/external-api', async (req, res) => {
+  try {
+    const stats = externalApiTasks.getApiStats();
+    res.json({
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString(),
+      externalApi: {
+        name: 'NetEase Cloud Music API',
+        url: 'https://neteasecloudmusicapi-wb0d.onrender.com/',
+        stats
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get external API stats',
+      error: error.message,
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// POST /apiv2/external-api/test - Manually test external API
+router.post('/external-api/test', async (req, res) => {
+  try {
+    const result = await externalApiTasks.pingExternalApi();
+    res.json({
+      success: true,
+      message: 'External API test completed',
+      result,
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to test external API',
+      error: error.message,
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// POST /apiv2/external-api/test-endpoints - Test specific endpoints
+router.post('/external-api/test-endpoints', async (req, res) => {
+  try {
+    const results = await externalApiTasks.testNetEaseEndpoints();
+    res.json({
+      success: true,
+      message: 'External API endpoints test completed',
+      results,
+      version: config.api.v2.version,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to test external API endpoints',
       error: error.message,
       version: config.api.v2.version,
       timestamp: new Date().toISOString()

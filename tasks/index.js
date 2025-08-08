@@ -6,6 +6,7 @@ const logger = require('../utils/logger');
 const cleanupTasks = require('./cleanup');
 const healthCheckTasks = require('./healthCheck');
 const dataSyncTasks = require('./dataSync');
+const externalApiTasks = require('./externalApi');
 
 class TaskManager {
   constructor() {
@@ -32,6 +33,9 @@ class TaskManager {
 
     // Start data sync tasks
     this.startDataSyncTasks();
+
+    // Start external API monitoring tasks
+    this.startExternalApiTasks();
 
     this.isRunning = true;
     logger.info('Task manager started successfully');
@@ -152,6 +156,31 @@ class TaskManager {
     });
 
     this.tasks.set('data-backup', backupTask);
+  }
+
+  /**
+   * Start external API monitoring tasks
+   */
+  startExternalApiTasks() {
+    // Ping NetEase Cloud Music API every minute to keep it alive
+    const neteasePingTask = cron.schedule('* * * * *', () => {
+      externalApiTasks.pingExternalApi();
+    }, {
+      scheduled: true,
+      timezone: "UTC"
+    });
+
+    this.tasks.set('netease-api-ping', neteasePingTask);
+
+    // Test NetEase API endpoints every 30 minutes
+    const neteaseTestTask = cron.schedule('*/30 * * * *', () => {
+      externalApiTasks.testNetEaseEndpoints();
+    }, {
+      scheduled: true,
+      timezone: "UTC"
+    });
+
+    this.tasks.set('netease-api-test', neteaseTestTask);
   }
 }
 

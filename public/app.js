@@ -257,6 +257,91 @@ const stopTaskManager = async () => {
     }
 };
 
+// External API functions
+const testExternalApi = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Testing External API...</p>';
+    
+    try {
+        const response = await fetch('/apiv2/external-api/test', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ External API Test Completed!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
+const testExternalApiEndpoints = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Testing External API Endpoints...</p>';
+    
+    try {
+        const response = await fetch('/apiv2/external-api/test-endpoints', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ External API Endpoints Test Completed!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
+const getExternalApiStats = async () => {
+    const responseDiv = document.getElementById('api-response');
+    responseDiv.innerHTML = '<p class="text-gray-500">Getting External API Stats...</p>';
+    
+    try {
+        const response = await fetch('/apiv2/external-api');
+        const data = await response.json();
+        
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-green-600">✅ External API Stats!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        responseDiv.innerHTML = `
+            <div class="space-y-2">
+                <p class="font-semibold text-red-600">❌ Error!</p>
+                <pre class="bg-white p-3 rounded border text-sm overflow-x-auto">${error.message}</pre>
+            </div>
+        `;
+    }
+};
+
 // Contact form handling
 const handleContactSubmit = async (event) => {
     event.preventDefault();
