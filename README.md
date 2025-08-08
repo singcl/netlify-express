@@ -25,7 +25,9 @@ netlify-express/
 │   ├── apiV1.js         # API v1 routes
 │   └── apiV2.js         # API v2 routes
 ├── utils/                # Utility functions
-│   └── response.js      # Standardized response helpers
+│   ├── response.js      # Standardized response helpers
+│   ├── logger.js        # Logging utility
+│   └── timezone.js      # Timezone utility (East 8)
 ├── public/               # Static files served by Express
 │   ├── index.html       # Main HTML file
 │   └── app.js           # Frontend JavaScript
@@ -66,6 +68,7 @@ netlify-express/
 - **Order Management**: Full order creation with validation and total calculation
 - **Task Management**: Scheduled tasks for cleanup, health checks, and data synchronization
 - **External API Monitoring**: Automatic monitoring of external APIs to keep them alive
+- **Timezone Support**: All timestamps use East 8 timezone (UTC+8, Asia/Shanghai)
 - **Version Information**: All responses include API version for compatibility tracking
 
 ## 🚀 Quick Start

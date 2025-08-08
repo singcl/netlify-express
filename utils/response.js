@@ -1,4 +1,5 @@
 // Utility functions for standardized API responses
+const timezone = require('./timezone');
 
 /**
  * Send a success response
@@ -12,7 +13,7 @@ const sendSuccess = (res, data, statusCode = 200, message = 'Success') => {
     success: true,
     message,
     data,
-    timestamp: new Date().toISOString()
+    timestamp: timezone.toISOString()
   });
 };
 
@@ -27,7 +28,7 @@ const sendError = (res, message, statusCode = 400, details = null) => {
   const response = {
     success: false,
     message,
-    timestamp: new Date().toISOString()
+    timestamp: timezone.toISOString()
   };
   
   if (details) {
@@ -59,7 +60,7 @@ const sendPaginated = (res, data, page, limit, total) => {
       hasNext: page < totalPages,
       hasPrev: page > 1
     },
-    timestamp: new Date().toISOString()
+    timestamp: timezone.toISOString()
   });
 };
 

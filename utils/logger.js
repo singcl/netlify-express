@@ -1,4 +1,5 @@
 // Logger utility for consistent logging across the application
+const timezone = require('./timezone');
 
 /**
  * Log levels
@@ -22,7 +23,7 @@ const getLogLevel = () => {
  * Format log message with timestamp and level
  */
 const formatMessage = (level, message, data = null) => {
-  const timestamp = new Date().toISOString();
+  const timestamp = timezone.toISOString();
   const logEntry = {
     timestamp,
     level: level.toUpperCase(),

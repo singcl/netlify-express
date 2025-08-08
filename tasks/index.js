@@ -1,6 +1,7 @@
 const cron = require('node-cron');
 const config = require('../config/app');
 const logger = require('../utils/logger');
+const timezone = require('../utils/timezone');
 
 // Import individual task modules
 const cleanupTasks = require('./cleanup');
@@ -76,7 +77,7 @@ class TaskManager {
       status.tasks.push({
         name,
         running: task.running,
-        nextRun: task.nextDate ? task.nextDate().toISOString() : null
+        nextRun: task.nextDate ? timezone.toISOString(task.nextDate()) : null
       });
     });
 
@@ -92,7 +93,7 @@ class TaskManager {
       cleanupTasks.cleanupLogs();
     }, {
       scheduled: true,
-      timezone: "UTC"
+      timezone: "Asia/Shanghai"
     });
 
     this.tasks.set('cleanup-logs', cleanupLogsTask);
@@ -102,7 +103,7 @@ class TaskManager {
       cleanupTasks.cleanupTempFiles();
     }, {
       scheduled: true,
-      timezone: "UTC"
+      timezone: "Asia/Shanghai"
     });
 
     this.tasks.set('cleanup-temp', cleanupTempTask);
@@ -117,7 +118,7 @@ class TaskManager {
       healthCheckTasks.performHealthCheck();
     }, {
       scheduled: true,
-      timezone: "UTC"
+      timezone: "Asia/Shanghai"
     });
 
     this.tasks.set('health-check', healthCheckTask);
@@ -127,7 +128,7 @@ class TaskManager {
       healthCheckTasks.checkDatabaseHealth();
     }, {
       scheduled: true,
-      timezone: "UTC"
+      timezone: "Asia/Shanghai"
     });
 
     this.tasks.set('db-health-check', dbHealthCheckTask);
@@ -142,7 +143,7 @@ class TaskManager {
       dataSyncTasks.syncData();
     }, {
       scheduled: true,
-      timezone: "UTC"
+      timezone: "Asia/Shanghai"
     });
 
     this.tasks.set('data-sync', dataSyncTask);
@@ -152,7 +153,7 @@ class TaskManager {
       dataSyncTasks.backupData();
     }, {
       scheduled: true,
-      timezone: "UTC"
+      timezone: "Asia/Shanghai"
     });
 
     this.tasks.set('data-backup', backupTask);
@@ -167,7 +168,7 @@ class TaskManager {
       externalApiTasks.pingExternalApi();
     }, {
       scheduled: true,
-      timezone: "UTC"
+      timezone: "Asia/Shanghai"
     });
 
     this.tasks.set('netease-api-ping', neteasePingTask);
@@ -177,7 +178,7 @@ class TaskManager {
       externalApiTasks.testNetEaseEndpoints();
     }, {
       scheduled: true,
-      timezone: "UTC"
+      timezone: "Asia/Shanghai"
     });
 
     this.tasks.set('netease-api-test', neteaseTestTask);

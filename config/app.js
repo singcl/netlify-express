@@ -4,6 +4,13 @@ const config = {
   port: process.env.PORT || 3000,
   nodeEnv: process.env.NODE_ENV || 'development',
   
+  // Timezone configuration
+  timezone: {
+    zone: 'Asia/Shanghai',
+    offset: '+08:00',
+    locale: 'zh-CN'
+  },
+  
   // API configuration
   api: {
     v1: {

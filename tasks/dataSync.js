@@ -2,6 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const logger = require('../utils/logger');
 const config = require('../config/app');
+const timezone = require('../utils/timezone');
 
 /**
  * Sync data with external sources
@@ -11,7 +12,7 @@ const syncData = async () => {
     logger.info('Starting data synchronization task...');
     
     const syncResults = {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'completed',
       operations: []
     };
@@ -49,7 +50,7 @@ const syncData = async () => {
   } catch (error) {
     logger.error('Error during data synchronization:', error);
     return {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'failed',
       error: error.message
     };
@@ -74,7 +75,7 @@ const backupData = async () => {
     }
     
     const backupResults = {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'completed',
       backups: []
     };
@@ -94,7 +95,7 @@ const backupData = async () => {
       // Create mock backup data
       const backupData = {
         type,
-        timestamp: new Date().toISOString(),
+        timestamp: timezone.toISOString(),
         version: config.api.v2.version,
         data: generateMockData(type)
       };
@@ -121,7 +122,7 @@ const backupData = async () => {
   } catch (error) {
     logger.error('Error during data backup:', error);
     return {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'failed',
       error: error.message
     };
@@ -135,9 +136,9 @@ const generateMockData = (type) => {
   switch (type) {
     case 'users':
       return [
-        { id: 1, name: 'John Doe', email: 'john@example.com', createdAt: new Date().toISOString() },
-        { id: 2, name: 'Jane Smith', email: 'jane@example.com', createdAt: new Date().toISOString() },
-        { id: 3, name: 'Bob Johnson', email: 'bob@example.com', createdAt: new Date().toISOString() }
+        { id: 1, name: 'John Doe', email: 'john@example.com', createdAt: timezone.toISOString() },
+        { id: 2, name: 'Jane Smith', email: 'jane@example.com', createdAt: timezone.toISOString() },
+        { id: 3, name: 'Bob Johnson', email: 'bob@example.com', createdAt: timezone.toISOString() }
       ];
     
     case 'products':
@@ -149,8 +150,8 @@ const generateMockData = (type) => {
     
     case 'orders':
       return [
-        { id: '1', customerId: 'CUST123', total: 199.98, status: 'completed', createdAt: new Date().toISOString() },
-        { id: '2', customerId: 'CUST456', total: 149.99, status: 'pending', createdAt: new Date().toISOString() }
+        { id: '1', customerId: 'CUST123', total: 199.98, status: 'completed', createdAt: timezone.toISOString() },
+        { id: '2', customerId: 'CUST456', total: 149.99, status: 'pending', createdAt: timezone.toISOString() }
       ];
     
     case 'config':

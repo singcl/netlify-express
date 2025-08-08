@@ -1,5 +1,6 @@
 const logger = require('../utils/logger');
 const config = require('../config/app');
+const timezone = require('../utils/timezone');
 
 /**
  * Perform system health check
@@ -9,7 +10,7 @@ const performHealthCheck = async () => {
     logger.info('Starting system health check...');
     
     const healthStatus = {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'healthy',
       checks: {}
     };
@@ -64,7 +65,7 @@ const performHealthCheck = async () => {
   } catch (error) {
     logger.error('Error during system health check:', error);
     return {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'unhealthy',
       error: error.message
     };
@@ -82,7 +83,7 @@ const checkDatabaseHealth = async () => {
     // For now, we'll simulate a database health check
     
     const dbHealth = {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'healthy',
       database: 'simulated',
       checks: {
@@ -101,7 +102,7 @@ const checkDatabaseHealth = async () => {
   } catch (error) {
     logger.error('Error during database health check:', error);
     return {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'unhealthy',
       error: error.message
     };
@@ -116,7 +117,7 @@ const checkApiHealth = async () => {
     logger.info('Starting API health check...');
     
     const apiHealth = {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'healthy',
       endpoints: {}
     };
@@ -156,7 +157,7 @@ const checkApiHealth = async () => {
   } catch (error) {
     logger.error('Error during API health check:', error);
     return {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       status: 'unhealthy',
       error: error.message
     };

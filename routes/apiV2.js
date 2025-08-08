@@ -2,6 +2,7 @@ const express = require('express');
 const config = require('../config/app');
 const taskManager = require('../tasks');
 const externalApiTasks = require('../tasks/externalApi');
+const timezone = require('../utils/timezone');
 const router = express.Router();
 
 // GET /apiv2/status
@@ -9,9 +10,10 @@ router.get('/status', (req, res) => {
   res.json({
     version: config.api.v2.version,
     status: 'active',
-    timestamp: new Date().toISOString(),
+    timestamp: timezone.toISOString(),
     environment: config.nodeEnv,
-    features: ['enhanced-api', 'better-performance', 'improved-security']
+    features: ['enhanced-api', 'better-performance', 'improved-security'],
+    timezone: timezone.getTimezoneInfo()
   });
 });
 
@@ -61,7 +63,8 @@ router.get('/products', (req, res) => {
   res.json({
     version: config.api.v2.version,
     count: filteredProducts.length,
-    products: filteredProducts
+    products: filteredProducts,
+    timestamp: timezone.toISOString()
   });
 });
 
@@ -84,7 +87,7 @@ router.post('/orders', (req, res) => {
     items,
     shippingAddress,
     status: 'pending',
-    createdAt: new Date().toISOString(),
+    createdAt: timezone.toISOString(),
     total: items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   };
   
@@ -94,7 +97,8 @@ router.post('/orders', (req, res) => {
     success: true,
     message: 'Order created successfully',
     order,
-    version: config.api.v2.version
+    version: config.api.v2.version,
+    timestamp: timezone.toISOString()
   });
 });
 
@@ -103,7 +107,7 @@ router.get('/tasks', (req, res) => {
   const status = taskManager.getStatus();
   res.json({
     version: config.api.v2.version,
-    timestamp: new Date().toISOString(),
+    timestamp: timezone.toISOString(),
     ...status
   });
 });
@@ -116,7 +120,7 @@ router.post('/tasks/start', (req, res) => {
       success: true,
       message: 'Task manager started successfully',
       version: config.api.v2.version,
-      timestamp: new Date().toISOString()
+      timestamp: timezone.toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -124,7 +128,7 @@ router.post('/tasks/start', (req, res) => {
       message: 'Failed to start task manager',
       error: error.message,
       version: config.api.v2.version,
-      timestamp: new Date().toISOString()
+      timestamp: timezone.toISOString()
     });
   }
 });
@@ -137,7 +141,7 @@ router.post('/tasks/stop', (req, res) => {
       success: true,
       message: 'Task manager stopped successfully',
       version: config.api.v2.version,
-      timestamp: new Date().toISOString()
+      timestamp: timezone.toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -145,7 +149,7 @@ router.post('/tasks/stop', (req, res) => {
       message: 'Failed to stop task manager',
       error: error.message,
       version: config.api.v2.version,
-      timestamp: new Date().toISOString()
+      timestamp: timezone.toISOString()
     });
   }
 });
@@ -156,7 +160,7 @@ router.get('/external-api', async (req, res) => {
     const stats = externalApiTasks.getApiStats();
     res.json({
       version: config.api.v2.version,
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       externalApi: {
         name: 'NetEase Cloud Music API',
         url: 'https://neteasecloudmusicapi-wb0d.onrender.com/',
@@ -183,7 +187,7 @@ router.post('/external-api/test', async (req, res) => {
       message: 'External API test completed',
       result,
       version: config.api.v2.version,
-      timestamp: new Date().toISOString()
+      timestamp: timezone.toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -191,7 +195,7 @@ router.post('/external-api/test', async (req, res) => {
       message: 'Failed to test external API',
       error: error.message,
       version: config.api.v2.version,
-      timestamp: new Date().toISOString()
+      timestamp: timezone.toISOString()
     });
   }
 });
@@ -205,7 +209,7 @@ router.post('/external-api/test-endpoints', async (req, res) => {
       message: 'External API endpoints test completed',
       results,
       version: config.api.v2.version,
-      timestamp: new Date().toISOString()
+      timestamp: timezone.toISOString()
     });
   } catch (error) {
     res.status(500).json({
@@ -213,7 +217,7 @@ router.post('/external-api/test-endpoints', async (req, res) => {
       message: 'Failed to test external API endpoints',
       error: error.message,
       version: config.api.v2.version,
-      timestamp: new Date().toISOString()
+      timestamp: timezone.toISOString()
     });
   }
 });

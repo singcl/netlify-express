@@ -1,11 +1,12 @@
 const express = require('express');
+const timezone = require('../utils/timezone');
 const router = express.Router();
 
 // GET /api/hello
 router.get('/hello', (req, res) => {
   res.json({ 
     message: 'Hello from Express API!',
-    timestamp: new Date().toISOString(),
+    timestamp: timezone.toISOString(),
     environment: process.env.NODE_ENV || 'development'
   });
 });

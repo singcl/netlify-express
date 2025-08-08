@@ -2,6 +2,7 @@ const https = require('https');
 const http = require('http');
 const logger = require('../utils/logger');
 const config = require('../config/app');
+const timezone = require('../utils/timezone');
 
 /**
  * Ping external API to keep it alive
@@ -17,7 +18,7 @@ const pingExternalApi = async () => {
     const duration = Date.now() - startTime;
     
     const pingResult = {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       api: 'NetEase Cloud Music API',
       url: apiUrl,
       status: result.success ? 'success' : 'failed',
@@ -38,7 +39,7 @@ const pingExternalApi = async () => {
   } catch (error) {
     logger.error('Error during external API ping:', error);
     return {
-      timestamp: new Date().toISOString(),
+      timestamp: timezone.toISOString(),
       api: 'NetEase Cloud Music API',
       url: 'https://neteasecloudmusicapi-wb0d.onrender.com/',
       status: 'error',
@@ -110,7 +111,7 @@ const getApiStats = () => {
     successfulPings: 95,
     failedPings: 5,
     averageResponseTime: '245ms',
-    lastPing: new Date().toISOString(),
+    lastPing: timezone.toISOString(),
     uptime: '99.5%'
   };
 };
