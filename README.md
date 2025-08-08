@@ -194,6 +194,17 @@ The application includes a comprehensive task management system with the followi
    - **NetEase API Ping**: Every minute - Keeps the NetEase Cloud Music API alive
    - **NetEase API Testing**: Every 30 minutes - Tests specific API endpoints
 
+### Timezone Configuration
+
+All timestamps in the application use **East 8 timezone (UTC+8, Asia/Shanghai)**:
+
+- **API Responses**: All timestamps are in East 8 timezone
+- **Logging**: All log timestamps use East 8 timezone
+- **Scheduled Tasks**: All cron jobs use Asia/Shanghai timezone
+- **Database Records**: All timestamps are stored in East 8 timezone
+
+The timezone configuration is centralized in `config/app.js` and managed through `utils/timezone.js`.
+
 ### Task Management
 
 - **Start Tasks**: `POST /apiv2/tasks/start`
