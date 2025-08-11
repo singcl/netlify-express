@@ -1,6 +1,14 @@
 const express = require('express');
 const timezone = require('../utils/timezone');
+const mongoose = require('mongoose');
 const router = express.Router();
+
+// Define a Mongoose model
+const DataSchema = new mongoose.Schema({
+  name: String,
+  value: Number,
+});
+const Data = mongoose.model('Data', DataSchema);
 
 // GET /api/hello
 router.get('/hello', (req, res) => {
@@ -39,6 +47,16 @@ router.post('/contact', (req, res) => {
     success: true, 
     message: 'Thank you for your message! We\'ll get back to you soon.' 
   });
+});
+
+// GET /api/data
+router.get('/data', async (req, res) => {
+  try {
+    const result = await Data.find({});
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router; 
