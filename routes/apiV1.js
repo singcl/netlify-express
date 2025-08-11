@@ -1,5 +1,6 @@
 const express = require('express');
 const timezone = require('../utils/timezone');
+const Contact = require('../models/Contact');
 const router = express.Router();
 
 // GET /api/hello
@@ -12,18 +13,18 @@ router.get('/hello', (req, res) => {
 });
 
 // GET /api/users
-router.get('/users', (req, res) => {
-  // Mock user data
-  const users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com' }
-  ];
-  res.json(users);
+router.get('/users', async (req, res) => {
+  try {
+    const contacts = await Contact.find();
+    res.json(contacts);
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+    res.status(500).json({ error: 'Failed to fetch contacts' });
+  }
 });
 
 // POST /api/contact
-router.post('/contact', (req, res) => {
+router.post('/contact', async (req, res) => {
   const { name, email, message } = req.body;
   
   if (!name || !email || !message) {
@@ -32,13 +33,19 @@ router.post('/contact', (req, res) => {
     });
   }
   
-  // In a real app, you would save this to a database
-  console.log('Contact form submission:', { name, email, message });
-  
-  res.json({ 
-    success: true, 
-    message: 'Thank you for your message! We\'ll get back to you soon.' 
-  });
+  try {
+    const newContact = await Contact.create({ name, email, message });
+    res.status(201).json({ 
+      success: true, 
+      data: newContact,
+      message: 'Thank you for your message! We\'ll get back to you soon.' 
+    });
+  } catch (error) {
+    console.error('Error saving contact:', error);
+    res.status(500).json({ 
+      error: 'Failed to save your message. Please try again later.' 
+    });
+  }
 });
 
 module.exports = router; 
