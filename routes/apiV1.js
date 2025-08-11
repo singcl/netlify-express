@@ -33,6 +33,24 @@ router.post('/contact', async (req, res) => {
     });
   }
   
+  if (name.length > 50) {
+    return res.status(400).json({ 
+      error: 'Name must be less than 50 characters' 
+    });
+  }
+  
+  if (email.length > 100) {
+    return res.status(400).json({ 
+      error: 'Email must be less than 100 characters' 
+    });
+  }
+  
+  if (message.length > 500) {
+    return res.status(400).json({ 
+      error: 'Message must be less than 500 characters' 
+    });
+  }
+  
   try {
     const newContact = await Contact.create({ name, email, message });
     res.status(201).json({ 
