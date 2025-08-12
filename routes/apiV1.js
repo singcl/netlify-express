@@ -1,69 +1,40 @@
 const express = require('express');
 const timezone = require('../utils/timezone');
-const Contact = require('../models/Contact');
+const ContactController = require('../controllers/ContactController');
 const router = express.Router();
 
 // GET /api/hello
 router.get('/hello', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Hello from Express API!',
     timestamp: timezone.toISOString(),
     environment: process.env.NODE_ENV || 'development'
   });
 });
 
-// GET /api/users
-router.get('/users', async (req, res) => {
-  try {
-    const contacts = await Contact.find();
-    res.json(contacts);
-  } catch (error) {
-    console.error('Error fetching contacts:', error);
-    res.status(500).json({ error: 'Failed to fetch contacts' });
-  }
+// GET /api/contacts - 获取所有联系人
+router.get('/contacts', ContactController.getContacts);
+
+// 保持向后兼容性：重定向GET /api/users到GET /api/contacts
+router.get('/users', (req, res) => {
+  res.redirect('/api/contacts');
 });
 
-// POST /api/contact
-router.post('/contact', async (req, res) => {
-  const { name, email, message } = req.body;
-  
-  if (!name || !email || !message) {
-    return res.status(400).json({ 
-      error: 'Name, email, and message are required' 
-    });
-  }
-  
-  if (name.length > 50) {
-    return res.status(400).json({ 
-      error: 'Name must be less than 50 characters' 
-    });
-  }
-  
-  if (email.length > 100) {
-    return res.status(400).json({ 
-      error: 'Email must be less than 100 characters' 
-    });
-  }
-  
-  if (message.length > 500) {
-    return res.status(400).json({ 
-      error: 'Message must be less than 500 characters' 
-    });
-  }
-  
-  try {
-    const newContact = await Contact.create({ name, email, message });
-    res.status(201).json({ 
-      success: true, 
-      data: newContact,
-      message: 'Thank you for your message! We\'ll get back to you soon.' 
-    });
-  } catch (error) {
-    console.error('Error saving contact:', error);
-    res.status(500).json({ 
-      error: 'Failed to save your message. Please try again later.' 
-    });
-  }
+// GET /api/contacts/:id - 获取单个联系人
+router.get('/contacts/:id', ContactController.getContactById);
+
+// POST /api/contacts - 创建新联系人
+router.post('/contacts', ContactController.createContact);
+
+// 保持向后兼容性：重定向POST /api/contact到POST /api/contacts
+router.post('/contact', (req, res) => {
+  res.redirect(307, '/api/contacts');
 });
 
-module.exports = router; 
+// PUT /api/contacts/:id - 更新联系人
+router.put('/contacts/:id', ContactController.updateContact);
+
+// DELETE /api/contacts/:id - 删除联系人
+router.delete('/contacts/:id', ContactController.deleteContact);
+
+module.exports = router;

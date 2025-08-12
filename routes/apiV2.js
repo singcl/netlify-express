@@ -1,14 +1,21 @@
 const express = require('express');
 const config = require('../config/app');
-const taskManager = require('../tasks');
-const externalApiTasks = require('../tasks/externalApi');
 const timezone = require('../utils/timezone');
+const ProductController = require('../controllers/ProductController');
+const OrderController = require('../controllers/OrderController');
+const TaskController = require('../controllers/TaskController');
 const router = express.Router();
+
+// 设置API版本
+router.use((req, res, next) => {
+  req.app.set('apiVersion', config.api.v2.version);
+  next();
+});
 
 // GET /apiv2/status
 router.get('/status', (req, res) => {
   res.json({
-    version: config.api.v2.version,
+    version: req.app.get('apiVersion'),
     status: 'active',
     timestamp: timezone.toISOString(),
     environment: config.nodeEnv,
@@ -17,209 +24,61 @@ router.get('/status', (req, res) => {
   });
 });
 
-// GET /apiv2/products
-router.get('/products', (req, res) => {
-  // Mock product data for v2 API
-  const products = [
-    { 
-      id: 1, 
-      name: 'Premium Widget', 
-      price: 99.99, 
-      category: 'electronics',
-      inStock: true,
-      rating: 4.8
-    },
-    { 
-      id: 2, 
-      name: 'Super Gadget', 
-      price: 149.99, 
-      category: 'electronics',
-      inStock: false,
-      rating: 4.6
-    },
-    { 
-      id: 3, 
-      name: 'Amazing Tool', 
-      price: 79.99, 
-      category: 'tools',
-      inStock: true,
-      rating: 4.9
-    }
-  ];
-  
-  // Support query parameters for filtering
-  const { category, inStock } = req.query;
-  let filteredProducts = products;
-  
-  if (category) {
-    filteredProducts = filteredProducts.filter(product => product.category === category);
-  }
-  
-  if (inStock !== undefined) {
-    const stockFilter = inStock === 'true';
-    filteredProducts = filteredProducts.filter(product => product.inStock === stockFilter);
-  }
-  
-  res.json({
-    version: config.api.v2.version,
-    count: filteredProducts.length,
-    products: filteredProducts,
-    timestamp: timezone.toISOString()
-  });
-});
+// GET /apiv2/products - 获取产品列表
+router.get('/products', ProductController.getProducts);
 
-// POST /apiv2/orders
-router.post('/orders', (req, res) => {
-  const { customerId, items, shippingAddress } = req.body;
-  
-  if (!customerId || !items || !Array.isArray(items) || items.length === 0) {
-    return res.status(400).json({
-      error: 'Customer ID and items array are required',
-      version: config.api.v2.version
-    });
-  }
-  
-  // In a real app, you would save this to a database
-  const orderId = Date.now().toString();
-  const order = {
-    id: orderId,
-    customerId,
-    items,
-    shippingAddress,
-    status: 'pending',
-    createdAt: timezone.toISOString(),
-    total: items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
-  };
-  
-  console.log('New order created:', order);
-  
-  res.status(201).json({
-    success: true,
-    message: 'Order created successfully',
-    order,
-    version: config.api.v2.version,
-    timestamp: timezone.toISOString()
-  });
-});
+// GET /apiv2/products/:id - 获取单个产品
+router.get('/products/:id', ProductController.getProductById);
 
-// GET /apiv2/tasks - Get task manager status
-router.get('/tasks', (req, res) => {
-  const status = taskManager.getStatus();
-  res.json({
-    version: config.api.v2.version,
-    timestamp: timezone.toISOString(),
-    ...status
-  });
-});
+// POST /apiv2/products - 创建新产品
+router.post('/products', ProductController.createProduct);
 
-// POST /apiv2/tasks/start - Start task manager
-router.post('/tasks/start', (req, res) => {
-  try {
-    taskManager.start();
-    res.json({
-      success: true,
-      message: 'Task manager started successfully',
-      version: config.api.v2.version,
-      timestamp: timezone.toISOString()
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to start task manager',
-      error: error.message,
-      version: config.api.v2.version,
-      timestamp: timezone.toISOString()
-    });
-  }
-});
+// PUT /apiv2/products/:id - 更新产品
+router.put('/products/:id', ProductController.updateProduct);
 
-// POST /apiv2/tasks/stop - Stop task manager
-router.post('/tasks/stop', (req, res) => {
-  try {
-    taskManager.stop();
-    res.json({
-      success: true,
-      message: 'Task manager stopped successfully',
-      version: config.api.v2.version,
-      timestamp: timezone.toISOString()
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to stop task manager',
-      error: error.message,
-      version: config.api.v2.version,
-      timestamp: timezone.toISOString()
-    });
-  }
-});
+// DELETE /apiv2/products/:id - 删除产品
+router.delete('/products/:id', ProductController.deleteProduct);
 
-// GET /apiv2/external-api - Get external API monitoring status
-router.get('/external-api', async (req, res) => {
-  try {
-    const stats = externalApiTasks.getApiStats();
-    res.json({
-      version: config.api.v2.version,
-      timestamp: timezone.toISOString(),
-      externalApi: {
-        name: 'NetEase Cloud Music API',
-        url: 'https://neteasecloudmusicapi-wb0d.onrender.com/',
-        stats
-      }
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get external API stats',
-      error: error.message,
-      version: config.api.v2.version,
-      timestamp: new Date().toISOString()
-    });
-  }
-});
+// POST /apiv2/orders - 创建订单
+router.post('/orders', OrderController.createOrder);
 
-// POST /apiv2/external-api/test - Manually test external API
-router.post('/external-api/test', async (req, res) => {
-  try {
-    const result = await externalApiTasks.pingExternalApi();
-    res.json({
-      success: true,
-      message: 'External API test completed',
-      result,
-      version: config.api.v2.version,
-      timestamp: timezone.toISOString()
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to test external API',
-      error: error.message,
-      version: config.api.v2.version,
-      timestamp: timezone.toISOString()
-    });
-  }
-});
+// GET /apiv2/tasks - 获取任务管理器状态
+router.get('/tasks', TaskController.getTaskStatus);
 
-// POST /apiv2/external-api/test-endpoints - Test specific endpoints
+// POST /apiv2/tasks/start - 启动任务管理器
+router.post('/tasks/start', TaskController.startTaskManager);
+
+// POST /apiv2/tasks/stop - 停止任务管理器
+router.post('/tasks/stop', TaskController.stopTaskManager);
+
+// GET /apiv2/external-api - 获取外部API监控状态
+router.get('/external-api', TaskController.getExternalApiStatus);
+
+// POST /apiv2/external-api/test - 手动测试外部API
+router.post('/external-api/test', TaskController.testExternalApi);
+
+// POST /apiv2/external-api/test-endpoints - 测试特定端点
 router.post('/external-api/test-endpoints', async (req, res) => {
   try {
+    const externalApiTasks = require('../tasks/externalApi');
     const results = await externalApiTasks.testNetEaseEndpoints();
     res.json({
       success: true,
-      message: 'External API endpoints test completed',
+      message: '外部API端点测试完成',
       results,
-      version: config.api.v2.version,
+      version: req.app.get('apiVersion'),
       timestamp: timezone.toISOString()
     });
   } catch (error) {
+    console.error('测试外部API端点失败:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to test external API endpoints',
+      message: '测试外部API端点失败',
       error: error.message,
-      version: config.api.v2.version,
+      version: req.app.get('apiVersion'),
       timestamp: timezone.toISOString()
     });
   }
 });
 
-module.exports = router; 
+module.exports = router;
