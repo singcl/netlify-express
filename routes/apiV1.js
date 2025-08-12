@@ -17,7 +17,7 @@ router.get('/contacts', ContactController.getContacts);
 
 // 保持向后兼容性：重定向GET /api/users到GET /api/contacts
 router.get('/users', (req, res) => {
-  res.redirect('/api/contacts');
+  res.redirect(req.baseUrl + '/contacts');
 });
 
 // GET /api/contacts/:id - 获取单个联系人
@@ -28,7 +28,7 @@ router.post('/contacts', ContactController.createContact);
 
 // 保持向后兼容性：重定向POST /api/contact到POST /api/contacts
 router.post('/contact', (req, res) => {
-  res.redirect(307, '/api/contacts');
+  res.redirect(307, req.baseUrl + '/contacts');
 });
 
 // PUT /api/contacts/:id - 更新联系人
